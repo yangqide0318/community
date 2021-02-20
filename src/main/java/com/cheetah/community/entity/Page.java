@@ -1,5 +1,7 @@
 package com.cheetah.community.entity;
-//分装分页相关信息
+/*
+分装分页相关信息
+* */
 public class Page {
     // 当前页码
     private int current = 1;

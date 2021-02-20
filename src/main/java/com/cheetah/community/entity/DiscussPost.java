@@ -1,16 +1,39 @@
 package com.cheetah.community.entity;
 
-import java.util.Date;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.util.Date;
+/*
+* 文章类
+* 包含：id、作者id、标题、正文、类型（0-普通; 1-置顶;）、状态（0-正常; 1-精华; 2-拉黑;）、创建时间、评论条数、文章分数
+* */
+@Document(indexName = "discusspost", shards = 6, replicas = 3)
 public class DiscussPost {
+    @Id
     private int id;
+    @Field(type = FieldType.Integer)
     private int userId;
+    /*
+    * analyzer存储拆分引擎（分词器）
+    * searchAnalyzer搜索拆分引擎（也就是对我们在搜索框中输入的内容进行拆分）
+    *
+    * */
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String title;
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String content;
+    @Field(type = FieldType.Integer)
     private int type;
+    @Field(type = FieldType.Integer)
     private int status;
+    @Field(type = FieldType.Date)
     private Date createTime;
+    @Field(type = FieldType.Integer)
     private int commentCount;
+    @Field(type = FieldType.Double)
     private double score;
 
 

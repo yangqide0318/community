@@ -1,12 +1,15 @@
 package com.cheetah.community.controller;
 
+import com.cheetah.community.util.CommunityUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -115,5 +118,51 @@ public class TestController {
         list.add(emp);
 
         return list;
+    }
+    //cookie示例
+    @RequestMapping(path = "/cookie/set",method = RequestMethod.GET)
+    @ResponseBody
+    public String setCookie(HttpServletResponse response){
+        //创建cookie
+        Cookie cookie=new Cookie("code", CommunityUtil.generateUUID());
+        //设置生效的范围（同一个浏览器多次发送请求，哪些请求才发这个cookie，）
+        cookie.setPath("/community/test");
+        //设置生存时间，默认是关闭浏览器就没有了，但是设置了这个就会在时间内有效
+        cookie.setMaxAge(60*10);
+        //发送cookie
+        response.addCookie(cookie);
+        return "setCookie";
+    }
+    @RequestMapping(path = "/cookie/get",method = RequestMethod.GET)
+    @ResponseBody
+    public String getCookie(@CookieValue("code") String code){
+        System.out.println(code);
+        return "get cookie";
+    }
+    //session示例
+    //注意这里返回的包含sessionId的cookie时是不需要我们想上面那样自己去通过HttpServletResponse去传入SpringMVC自己干
+    //那之前我们设置的两个参数自然就是默认值，整个项目有效，浏览器一关cookie就不见了
+    @RequestMapping(path = "/session/set",method = RequestMethod.GET)
+    @ResponseBody
+    public String setSession(HttpSession session){
+        session.setAttribute("id",1);
+        session.setAttribute("name","test");
+        return "session test";
+
+    }
+    @RequestMapping(path = "/session/get",method = RequestMethod.GET)
+    @ResponseBody
+    //参数session也是SpringMVC自动注入不用声明
+    public String getSession(HttpSession session){
+        System.out.println(session.getAttribute("id"));
+        System.out.println(session.getAttribute("name"));
+        return "get session";
+    }
+    //ajax示例
+    @RequestMapping(path = "/ajax",method = RequestMethod.POST)
+    @ResponseBody
+    public String testAjax(String name,String age){
+        System.out.println(name+age);
+        return CommunityUtil.getJSONString(0,"操作成功");
     }
 }

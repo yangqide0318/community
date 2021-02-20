@@ -17,5 +17,6 @@ public class LoggerTests {
         logger.info("debug info");
         logger.warn("warn log");
         logger.error("error log");
+        
     }
 }

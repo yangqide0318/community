@@ -6,7 +6,7 @@ public class User {
     private int id;
     private String username;
     private String password;
-    private String salt;//言
+    private String salt;//言用于加密密码
     private String email;
     private int type;
     private int status;
